@@ -1,0 +1,42 @@
+# Generated from lib/harmonica/point.rb with RBS::Inline
+
+module Harmonica
+  # Point represents a point in 3D space.
+  #
+  # @example
+  #   point = Harmonica::Point.new(10.0, 20.0, 0.0)
+  #   point.x  # => 10.0
+  #   point.y  # => 20.0
+  #   point.z  # => 0.0
+  class Point
+    @x: Float
+
+    @y: Float
+
+    @z: Float
+
+    attr_accessor x: Float
+
+    attr_accessor y: Float
+
+    attr_accessor z: Float
+
+    # @rbs x: Integer | Float -- x coordinate
+    # @rbs y: Integer | Float -- y coordinate
+    # @rbs z: Integer | Float -- z coordinate
+    # @rbs return: void
+    def initialize: (?Integer | Float x, ?Integer | Float y, ?Integer | Float z) -> void
+
+    # : () -> Array[Float]
+    def to_a: () -> Array[Float]
+
+    # : (untyped other) -> bool
+    def ==: (untyped other) -> bool
+
+    # : () -> String
+    def to_s: () -> String
+
+    # : () -> String
+    def inspect: () -> String
+  end
+end

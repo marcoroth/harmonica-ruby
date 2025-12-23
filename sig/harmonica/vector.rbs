@@ -1,0 +1,71 @@
+# Generated from lib/harmonica/vector.rb with RBS::Inline
+
+module Harmonica
+  # Vector represents a vector in 3D space with magnitude and direction.
+  #
+  # @example
+  #   velocity = Harmonica::Vector.new(2.0, 0.0, 0.0)
+  #   gravity = Harmonica::GRAVITY
+  class Vector
+    @x: Float
+
+    @y: Float
+
+    @z: Float
+
+    attr_accessor x: Float
+
+    attr_accessor y: Float
+
+    attr_accessor z: Float
+
+    # @rbs x: Integer | Float -- x component
+    # @rbs y: Integer | Float -- y component
+    # @rbs z: Integer | Float -- z component
+    # @rbs return: void
+    def initialize: (?Integer | Float x, ?Integer | Float y, ?Integer | Float z) -> void
+
+    # : () -> Array[Float]
+    def to_a: () -> Array[Float]
+
+    # : (untyped other) -> bool
+    def ==: (untyped other) -> bool
+
+    # : () -> String
+    def to_s: () -> String
+
+    # : () -> String
+    def inspect: () -> String
+
+    # Vector addition
+    #
+    # : (Vector other) -> Vector
+    def +: (Vector other) -> Vector
+
+    # Vector subtraction
+    #
+    # : (Vector other) -> Vector
+    def -: (Vector other) -> Vector
+
+    # Scalar multiplication
+    #
+    # : (Integer | Float other) -> Vector
+    def *: (Integer | Float other) -> Vector
+
+    # Magnitude (length) of the vector
+    #
+    # : () -> Float
+    def magnitude: () -> Float
+
+    # Normalize the vector (unit vector)
+    #
+    # : () -> Vector
+    def normalize: () -> Vector
+  end
+
+  # origin at bottom-left, Y pointing up
+  GRAVITY: Vector
+
+  # origin at top-left, Y pointing down
+  TERMINAL_GRAVITY: Vector
+end

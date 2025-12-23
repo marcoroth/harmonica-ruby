@@ -1,0 +1,13 @@
+# Generated from lib/harmonica.rb with RBS::Inline
+
+module Harmonica
+  # Calculate time delta for a given frames per second.
+  # Use this when initializing Spring or Projectile.
+  #
+  # @example
+  #   spring = Harmonica::Spring.new(delta_time: Harmonica.fps(60), ...)
+  #
+  # @rbs frames_per_second: Integer -- frames per second
+  # @rbs return: Float
+  def self.fps: (Integer frames_per_second) -> Float
+end

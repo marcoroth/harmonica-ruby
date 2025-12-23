@@ -1,0 +1,120 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Damping comparison demo - shows different damping ratios
+
+require "bundler/setup"
+require "bubbletea"
+require "lipgloss"
+require "harmonica"
+
+FPS = 60
+TARGET_X = 50
+BAR_CHAR = "█"
+
+class FrameMessage < Bubbletea::Message
+end
+
+class SpringState
+  attr_accessor :x, :velocity
+
+  def initialize
+    @x = 0.0
+    @velocity = 0.0
+  end
+
+  def reset
+    @x = 0.0
+    @velocity = 0.0
+  end
+end
+
+class DampingDemo
+  include Bubbletea::Model
+
+  SPRINGS = [
+    { name: "Under-damped (0.2)", damping: 0.2, color: "212" },
+    { name: "Under-damped (0.5)", damping: 0.5, color: "213" },
+    { name: "Critical (1.0)", damping: 1.0, color: "120" },
+    { name: "Over-damped (2.0)", damping: 2.0, color: "75" },
+  ].freeze
+
+  def initialize
+    @springs = SPRINGS.map do |config|
+      {
+        name: config[:name],
+        spring: Harmonica::Spring.new(
+          delta_time: Harmonica.fps(FPS),
+          angular_frequency: 6.0,
+          damping_ratio: config[:damping]
+        ),
+        state: SpringState.new,
+        style: Lipgloss::Style.new.foreground(config[:color]),
+      }
+    end
+
+    @title_style = Lipgloss::Style.new.bold(true).foreground("255")
+    @label_style = Lipgloss::Style.new.foreground("241").width(22)
+    @help_style = Lipgloss::Style.new.foreground("241")
+    @target_style = Lipgloss::Style.new.foreground("241")
+  end
+
+  def init
+    cmd = Bubbletea.tick(0.5) { FrameMessage.new }
+    [self, cmd]
+  end
+
+  def update(message)
+    case message
+    when Bubbletea::KeyMessage
+      case message.to_s
+      when "q", "ctrl+c", "esc"
+        return [self, Bubbletea.quit]
+      when "r", " ", "space"
+        @springs.each { |spring| spring[:state].reset }
+
+        return [self, Bubbletea.tick(0.1) { FrameMessage.new }]
+      end
+
+    when FrameMessage
+      all_settled = true
+
+      @springs.each do |spring_config|
+        state = spring_config[:state]
+        state.x, state.velocity = spring_config[:spring].update(state.x, state.velocity, TARGET_X)
+
+        all_settled = false if (state.x - TARGET_X).abs > 0.01 || state.velocity.abs > 0.01
+      end
+
+      return [self, Bubbletea.tick(1.0 / FPS) { FrameMessage.new }] unless all_settled
+    end
+
+    [self, nil]
+  end
+
+  def view
+    lines = []
+    lines << ""
+    lines << @title_style.render("  Spring Damping Comparison")
+    lines << ""
+
+    target_line = (" " * (TARGET_X + 23)) + @target_style.render("│ target")
+    lines << target_line
+    lines << ""
+
+    @springs.each do |spring|
+      x = [spring[:state].x.round, 0].max
+      bar = spring[:style].render(BAR_CHAR * [x, 60].min)
+      label = @label_style.render("  #{spring[:name]}")
+      lines << "#{label} #{bar}"
+    end
+
+    lines << ""
+    lines << @help_style.render("  r/space restart • q quit")
+    lines << ""
+
+    lines.join("\n")
+  end
+end
+
+Bubbletea.run(DampingDemo.new)

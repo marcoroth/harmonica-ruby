@@ -1,0 +1,81 @@
+# Generated from lib/harmonica/spring.rb with RBS::Inline
+
+module Harmonica
+  # Spring is a damped harmonic oscillator for smooth, realistic spring-like motion.
+  #
+  # This is ported from Ryan Juckett's simple damped harmonic motion, originally
+  # written in C++. For background on the algorithm see:
+  # https://www.ryanjuckett.com/damped-springs/
+  #
+  # @example
+  #   # Initialize once
+  #   spring = Harmonica::Spring.new(
+  #     delta_time: Harmonica.fps(60),
+  #     angular_frequency: 6.0,
+  #     damping_ratio: 0.2
+  #   )
+  #
+  #   # Update on every frame
+  #   position = 0.0
+  #   velocity = 0.0
+  #   target = 100.0
+  #
+  #   loop do
+  #     position, velocity = spring.update(position, velocity, target)
+  #   end
+  class Spring
+    EPSILON: Float
+
+    @velocity_velocity_coefficient: Float
+
+    @velocity_position_coefficient: Float
+
+    @position_velocity_coefficient: Float
+
+    @position_position_coefficient: Float
+
+    @angular_frequency: Float
+
+    @damping_ratio: Float
+
+    @delta_time: Float
+
+    attr_reader position_position_coefficient: Float
+
+    attr_reader position_velocity_coefficient: Float
+
+    attr_reader velocity_position_coefficient: Float
+
+    attr_reader velocity_velocity_coefficient: Float
+
+    # Create a new Spring with precomputed coefficients.
+    #
+    # @rbs delta_time: Float -- time step (use Harmonica.fps for frame rate)
+    # @rbs angular_frequency: Float -- angular frequency of motion (affects speed)
+    # @rbs damping_ratio: Float -- damping ratio (> 1: over-damped, = 1: critical, < 1: under-damped)
+    # @rbs return: void
+    def initialize: (delta_time: Float, angular_frequency: Float, damping_ratio: Float) -> void
+
+    # Update position and velocity towards equilibrium position.
+    #
+    # @rbs position: Float -- current position
+    # @rbs velocity: Float -- current velocity
+    # @rbs equilibrium_position: Float -- target/equilibrium position
+    # @rbs return: [Float, Float]
+    def update: (Float position, Float velocity, Float equilibrium_position) -> [ Float, Float ]
+
+    private
+
+    # : () -> void
+    def compute_coefficients: () -> void
+
+    # : () -> void
+    def compute_over_damped: () -> void
+
+    # : () -> void
+    def compute_under_damped: () -> void
+
+    # : () -> void
+    def compute_critically_damped: () -> void
+  end
+end

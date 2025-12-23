@@ -1,0 +1,5 @@
+# Generated from lib/harmonica/version.rb with RBS::Inline
+
+module Harmonica
+  VERSION: String
+end

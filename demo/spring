@@ -1,0 +1,96 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Spring demo - smooth spring animation
+
+require "bundler/setup"
+require "bubbletea"
+require "lipgloss"
+require "harmonica"
+
+FPS = 60
+SPRITE_WIDTH = 12
+SPRITE_HEIGHT = 3
+FREQUENCY = 7.0
+DAMPING = 0.15
+TARGET_X = 50
+
+class FrameMessage < Bubbletea::Message
+end
+
+class SpringDemo
+  include Bubbletea::Model
+
+  def initialize
+    @x = 0.0
+    @x_velocity = 0.0
+    @started = false
+
+    @spring = Harmonica::Spring.new(
+      delta_time: Harmonica.fps(FPS),
+      angular_frequency: FREQUENCY,
+      damping_ratio: DAMPING
+    )
+
+    @sprite_style = Lipgloss::Style.new.foreground("255").background("99")
+    @help_style = Lipgloss::Style.new.foreground("241").margin_top(1)
+  end
+
+  def init
+    cmd = Bubbletea.tick(0.5) { FrameMessage.new }
+
+    [self, cmd]
+  end
+
+  def update(message)
+    case message
+    when Bubbletea::KeyMessage
+      case message.to_s
+      when "q", "ctrl+c", "esc"
+        return [self, Bubbletea.quit]
+      when "r"
+        @x = 0.0
+        @x_velocity = 0.0
+
+        return [self, Bubbletea.tick(0.1) { FrameMessage.new }]
+      end
+
+    when FrameMessage
+      @started = true
+
+      @x, @x_velocity = @spring.update(@x, @x_velocity, TARGET_X)
+
+      return [self, nil] if (@x - TARGET_X).abs < 0.01 && @x_velocity.abs < 0.01
+
+      return [self, Bubbletea.tick(1.0 / FPS) { FrameMessage.new }]
+    end
+
+    [self, nil]
+  end
+
+  def view
+    lines = []
+    lines << ""
+
+    x_position = [@x.round, 0].max
+
+    sprite_row = @sprite_style.render("/" * SPRITE_WIDTH)
+
+    SPRITE_HEIGHT.times do
+      lines << ((" " * x_position) + sprite_row)
+    end
+
+    lines << ""
+
+    info = "  x: #{@x.round(2).to_s.ljust(8)} velocity: #{@x_velocity.round(2).to_s.ljust(8)} target: #{TARGET_X}"
+    lines << info
+
+    lines << ""
+    lines << @help_style.render("  r restart • q quit")
+    lines << ""
+
+    lines.join("\n")
+  end
+end
+
+Bubbletea.run(SpringDemo.new)
