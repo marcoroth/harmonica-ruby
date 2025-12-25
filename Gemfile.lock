@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    harmonica (0.0.1)
+    harmonica (0.1.0)
 
 GEM
   remote: https://rubygems.org/
