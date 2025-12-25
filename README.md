@@ -131,7 +131,7 @@ end
 
 ```ruby
 Harmonica::GRAVITY           # Vector(0, -9.81, 0) - origin at bottom-left
-Harmonica::TERMINAL_GRAVITY  # Vector(0, 9.81, 0)  - origin at top-left
+Harmonica::TERMINAL_GRAVITY  # Vector(0,  9.81, 0) - origin at top-left
 ```
 
 #### Custom acceleration
