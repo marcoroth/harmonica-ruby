@@ -23,7 +23,7 @@ jobs:
           bundler-cache: true
 
       - name: Run tests
-        run: bundle exec mtest
+        run: bundle exec rake test
 
       - name: Build gem
         run: bundle exec rake build
