@@ -231,7 +231,7 @@ end
 ## Development
 
 **Requirements:**
-- Ruby 3.0+
+- Ruby 3.2+
 
 **Install dependencies:**
 
