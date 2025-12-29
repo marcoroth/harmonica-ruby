@@ -23,7 +23,7 @@ Gem::Specification.new do |spec|
     "harmonica.gemspec",
     "LICENSE.txt",
     "README.md",
-    "lib/**/*.rb"
+    "{lib,sig}/**/*"
   ]
 
   spec.bindir = "exe"
